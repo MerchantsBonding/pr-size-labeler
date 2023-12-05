@@ -6,17 +6,11 @@ github::calculate_total_modifications() {
   local -r pr_number="${1}"
   local -r files_to_ignore="${2}"
 
-  if [ -z "$files_to_ignore" ]; then
-    echo "CURL"
-    echo "Authorization: token $GITHUB_TOKEN"
-    echo "$GITHUB_API_HEADER"
-    echo "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/pulls/$pr_number"
-    echo "CURL FOR REAL"
-    curl -sSL -H "Authorization: token $GITHUB_TOKEN" -H "$GITHUB_API_HEADER" "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/pulls/$pr_number"
-    local -r body=$(curl -sSL -H "Authorization: token $GITHUB_TOKEN" -H "$GITHUB_API_HEADER" "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/pulls/$pr_number")
-    echo "BODY"
-    echo "$body"
+  echo "Files to ignore: $files_to_ignore"
+  exit 99
 
+  if [ -z "$files_to_ignore" ]; then
+    local -r body=$(curl -sSL -H "Authorization: token $GITHUB_TOKEN" -H "$GITHUB_API_HEADER" "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/pulls/$pr_number")
     local -r additions=$(echo "$body" | jq '.additions')
     local -r deletions=$(echo "$body" | jq '.deletions')
 
